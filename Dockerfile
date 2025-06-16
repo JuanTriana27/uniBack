@@ -6,22 +6,25 @@ RUN mvn clean package -DskipTests
 FROM eclipse-temurin:21-jdk-alpine
 WORKDIR /app
 
-# 1. Instalar certificados SSL específicos para Render/Let's Encrypt
-RUN apk add --no-cache ca-certificates openssl && \
-    wget -O /usr/local/share/ca-certificates/Render_ISRG_Root_X1.crt https://letsencrypt.org/certs/isrgrootx1.pem && \
+# 1. Actualizar Alpine y paquetes SSL
+RUN apk update && apk upgrade && \
+    apk add --no-cache ca-certificates openssl postgresql-client
+
+# 2. Descargar y configurar certificado raíz ISRG
+RUN wget -O /usr/local/share/ca-certificates/ISRG_Root_X1.crt https://letsencrypt.org/certs/isrgrootx1.pem && \
     update-ca-certificates
 
-# 2. Configurar almacén de confianza de Java
+# 3. Configurar almacén de confianza de Java
 RUN keytool -importcert -noprompt \
     -keystore $JAVA_HOME/lib/security/cacerts \
     -storepass changeit \
-    -file /usr/local/share/ca-certificates/Render_ISRG_Root_X1.crt \
-    -alias render_isrg_root_x1
+    -file /usr/local/share/ca-certificates/ISRG_Root_X1.crt \
+    -alias isrg_root_x1
 
-# 3. Copiar aplicación
+# 4. Copiar aplicación
 COPY --from=build /app/target/inmobiliaria-*.jar app.jar
 
-# 4. Script de entrada mejorado
+# 5. Script de entrada simplificado
 COPY entrypoint.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
 
