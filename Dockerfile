@@ -14,9 +14,9 @@ RUN apk update && apk upgrade && \
     postgresql-client \
     bind-tools \
     curl \
-    netcat-openbsd \
-    tcping
+    netcat-openbsd
 
+# Instalar certificado Let's Encrypt
 RUN wget -O /usr/local/share/ca-certificates/ISRG_Root_X1.crt https://letsencrypt.org/certs/isrgrootx1.pem && \
     update-ca-certificates && \
     keytool -importcert -noprompt \
