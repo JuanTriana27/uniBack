@@ -1,11 +1,18 @@
 #!/bin/sh
 
-# Verificar conexión a PostgreSQL
-echo "Testing database connection to $DB_HOST:$DB_PORT..."
-until PGPASSWORD=$DB_PASSWORD psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d "$DB_NAME" -c '\q'; do
-  echo "PostgreSQL is unavailable - sleeping"
-  sleep 2
+# Configurar SSL explícitamente para PostgreSQL
+export PGSSLMODE="require"
+export PGSSLROOTCERT="/usr/local/share/ca-certificates/Render_ISRG_Root_X1.crt"
+
+# Espera activa con verificación SSL
+echo "Verificando conexión SSL con PostgreSQL..."
+timeout 10 openssl s_client -connect $DB_HOST:$DB_PORT -showcerts </dev/null
+
+echo "Validando conexión a PostgreSQL..."
+while ! PGPASSWORD=$DB_PASSWORD psql "host=$DB_HOST port=$DB_PORT user=$DB_USER dbname=$DB_NAME sslmode=require" -c "SELECT 1" >/dev/null 2>&1; do
+  echo "PostgreSQL no está disponible - reintentando en 3 segundos..."
+  sleep 3
 done
 
-echo "PostgreSQL is ready - starting application"
+echo "PostgreSQL está listo - iniciando aplicación..."
 exec java -jar app.jar
