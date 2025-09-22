@@ -15,8 +15,9 @@ public class CorsConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedOrigins(
-                            "http://localhost:3000", 
-                            "https://inmobiliariadb.netlify.app"
+                                "http://localhost:3000",
+                                "http://localhost:8888", // <-- AGREGADO
+                                "https://inmobiliariadb.netlify.app"
                         )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*");
