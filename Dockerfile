@@ -1,12 +1,23 @@
 FROM maven:3.9.6-eclipse-temurin-21 AS build
 WORKDIR /app
+
+# Configurar encoding antes de copiar archivos
+ENV LANG C.UTF-8
+ENV LC_ALL C.UTF-8
+
 COPY . .
-RUN mvn clean package -DskipTests
+
+# Verificar encoding de archivos
+RUN find . -name "*.properties" -exec file {} \; && \
+    mvn clean package -DskipTests -Dfile.encoding=UTF-8
 
 FROM eclipse-temurin:21-jdk-alpine
 WORKDIR /app
 
-# Diagnóstico y certificados
+# Configurar entorno UTF-8
+ENV LANG C.UTF-8
+ENV LC_ALL C.UTF-8
+
 RUN apk update && apk upgrade && \
     apk add --no-cache \
     ca-certificates \
