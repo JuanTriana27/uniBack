@@ -7,9 +7,19 @@ import co.edu.usbcali.inmobiliaria.model.TipoPropiedad;
 import java.util.List;
 
 public interface TipoPropiedadService {
-    List<TipoPropiedad> getAllTiposPropiedad();
-    TipoPropiedadDTO getTipoPropiedadPorId(Integer id);
-    TipoPropiedadDTO saveTipoPropiedad(TipoPropiedadDTO tipoPropiedadDTO) throws Exception;
 
+    // Metodo para obtener todos los tipos de propiedad
+    List<TipoPropiedad> getAllTiposPropiedad();
+
+    // Metodo para obtener un tipo de propiedad por su id
+    TipoPropiedadDTO getTipoPropiedadPorId(Integer id);
+
+    // Metodo para crear un nuevo tipo de propiedad
     CreateTipoPropiedadResponse createTipoPropiedad(CreateTipoPropiedadRequest createTipoPropiedadRequest) throws Exception;
+
+    // Metodo para actualizar tipo de propiedad
+    CreateTipoPropiedadResponse updateTipoPropiedad(Integer id, CreateTipoPropiedadRequest createTipoPropiedadRequest) throws Exception;
+
+    // Metodo para eliminar tipo de propiedad
+    void deleteTipoPropiedad(Integer id) throws Exception;
 }

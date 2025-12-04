@@ -1,6 +1,7 @@
 package co.edu.usbcali.inmobiliaria.controller;
 
 import co.edu.usbcali.inmobiliaria.dto.EstadoPropiedadDTO;
+import co.edu.usbcali.inmobiliaria.dto.MessageResponse;
 import co.edu.usbcali.inmobiliaria.dto.request.CreateEstadoPropiedadRequest;
 import co.edu.usbcali.inmobiliaria.dto.response.CreateEstadoPropiedadResponse;
 import co.edu.usbcali.inmobiliaria.model.EstadoPropiedad;
@@ -33,8 +34,34 @@ public class EstadoPropiedadController {
 
     //metodo para guardar un nuevo tipo de propiedad y sera de tipo POST
     @PostMapping("/guardar-nuevo")
-    public ResponseEntity<CreateEstadoPropiedadResponse> guardarNuevo(@RequestBody CreateEstadoPropiedadRequest createTipoPropiedadRequest) throws Exception {
+    public ResponseEntity<CreateEstadoPropiedadResponse> guardarNuevo(
+            @RequestBody CreateEstadoPropiedadRequest createTipoPropiedadRequest) throws Exception {
         CreateEstadoPropiedadResponse createTipoPropiedadResponse = estadoPropiedadService.createEstadoPropiedad(createTipoPropiedadRequest);
         return new ResponseEntity<>(createTipoPropiedadResponse, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<CreateEstadoPropiedadResponse> estadoPropiedad(
+            @PathVariable Integer id,
+            @RequestBody CreateEstadoPropiedadRequest createEstadoPropiedadRequest) {
+
+        try {
+            CreateEstadoPropiedadResponse response =
+                    estadoPropiedadService.updateEstadoPropiedad(id, createEstadoPropiedadRequest);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    // Metodo para eliminar
+    @DeleteMapping( "/delete/{id}")
+    public ResponseEntity<MessageResponse> deleteEstadoPropiedad(@PathVariable Integer id) {
+        try{
+            estadoPropiedadService.deleteEstadoPropiedad(id);
+            return new ResponseEntity<>(new MessageResponse("Estado Propiedad eliminado correctamente"), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new MessageResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
     }
 }

@@ -12,7 +12,12 @@ public interface PersonaService {
     // Metodo para consultar personas por su ID
     PersonaDTO getPersonaPorId(Integer id);
 
+    // Metodo para crear una persona
     CreatePersonaResponse createPersona(CreatePersonaRequest createPersonaRequest) throws Exception;
+
+    // Metodo para actualizar persona
     CreatePersonaResponse updatePersona(Integer id, CreatePersonaRequest createPersonaRequest) throws Exception;
+
+    // Metodo para eliminar persona
     void deletePersona(Integer id) throws Exception;
 }

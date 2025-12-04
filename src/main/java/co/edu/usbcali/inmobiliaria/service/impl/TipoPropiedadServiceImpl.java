@@ -17,6 +17,7 @@ public class TipoPropiedadServiceImpl implements TipoPropiedadService {
 
     private final TipoPropiedadRepository tipoPropiedadRepository;
 
+    // Metodo para obtener todos los tipos de propiedad
     @Override
     public List<TipoPropiedad> getAllTiposPropiedad() {
         // Aquí vamos a hacer la implementación de este
@@ -30,6 +31,7 @@ public class TipoPropiedadServiceImpl implements TipoPropiedadService {
         return tiposPropiedad;
     }
 
+    // Metodo para obtener un tipo de propiedad por su id
     @Override
     public TipoPropiedadDTO getTipoPropiedadPorId(Integer id) {
         return TipoPropiedadMapper.modelToDTO(
@@ -37,40 +39,8 @@ public class TipoPropiedadServiceImpl implements TipoPropiedadService {
         );
     }
 
+    // Metodo para crear tipo propiedaa
     @Override
-    public TipoPropiedadDTO saveTipoPropiedad(TipoPropiedadDTO tipoPropiedadDTO) throws Exception {
-        // Poner validaciones lógicas respecto al DTO del Tipo de Propiedad
-
-        // Validar que el tipo de propiedad no sea nulo
-        if (tipoPropiedadDTO == null) {
-            throw new Exception("El tipo de propiedad a guardar no puede ser nulo");
-        }
-
-        // Validar que el nombre no sea nulo
-        if (tipoPropiedadDTO.getNombre() == null ||
-                tipoPropiedadDTO.getNombre().isBlank() == true) {
-            throw new Exception("El nombre del tipo de propiedad no puede ser nulo o vacío");
-        }
-
-        // Validar que la descripción del tipo de propiedad a agregar no sea nula ni vacía
-        if (tipoPropiedadDTO.getDescripcion() == null
-                || tipoPropiedadDTO.getDescripcion().isBlank() == true) {
-            throw new Exception("La descripción del tipo de propiedad no puede ser nula o vacía");
-        }
-
-        // Convertir de DTO a Model
-        TipoPropiedad tipoPropiedad = TipoPropiedadMapper.dtoToModel(tipoPropiedadDTO);
-
-        // Persistir el modelo en base de datos
-        tipoPropiedad = tipoPropiedadRepository.save(tipoPropiedad);
-
-        // Convertir a DTO para retornar
-        TipoPropiedadDTO tipoPropiedadDTOPersistido = TipoPropiedadMapper.modelToDTO(tipoPropiedad);
-
-        // Retornar el DTO persistido como lo solicita el métdodo
-        return tipoPropiedadDTOPersistido;
-    }
-
     public CreateTipoPropiedadResponse createTipoPropiedad(CreateTipoPropiedadRequest createTipoPropiedadRequest) throws Exception {
         // Poner validaciones lógicas respecto al DTO del Tipo de Propiedad
 
@@ -102,5 +72,47 @@ public class TipoPropiedadServiceImpl implements TipoPropiedadService {
 
         // Retornar el Response persistido como lo solicita el métdodo
         return createTipoPropiedadResponse;
+    }
+
+    // Metodo para actualizar un tipo de propiedad
+    @Override
+    public CreateTipoPropiedadResponse updateTipoPropiedad(Integer id, CreateTipoPropiedadRequest createTipoPropiedadRequest) throws Exception {
+        // Verificamos que exista tipo de propiedad
+        TipoPropiedad tipoPropiedad = tipoPropiedadRepository.findById(id)
+                .orElseThrow(() -> new Exception("Tipo de propiedad no encontrado"));
+
+        // Validar que el nombre no sea nulo
+        if (createTipoPropiedadRequest.getNombre() == null ||
+                createTipoPropiedadRequest.getNombre().isBlank() == true) {
+            throw new Exception("El nombre del tipo de propiedad no puede ser nulo o vacío");
+        }
+
+        // Validar que la descripción del tipo de propiedad a agregar no sea nula ni vacía
+        if (createTipoPropiedadRequest.getDescripcion() == null
+                || createTipoPropiedadRequest.getDescripcion().isBlank() == true) {
+            throw new Exception("La descripción del tipo de propiedad no puede ser nula o vacía");
+        }
+
+        // Actualizar los datos de la propiedad con los nuevos valores
+        tipoPropiedad.setNombre(createTipoPropiedadRequest.getNombre());
+        tipoPropiedad.setDescripcion(createTipoPropiedadRequest.getDescripcion());
+
+        // Guardar el tipo de propiedad actualizado
+        tipoPropiedad = tipoPropiedadRepository.save(tipoPropiedad);
+
+        // Mapear y retornar el response
+        return TipoPropiedadMapper.modelToCreateResponse(tipoPropiedad);
+    }
+
+    // Metodo para eliminar un tipo de propiedad
+    @Override
+    public void deleteTipoPropiedad(Integer id) throws Exception {
+        // Verificamos que exista
+        if(!tipoPropiedadRepository.existsById(id)){
+            throw new Exception("Tipo de propiedad no encontrado");
+        }
+
+        // eliminamos
+        tipoPropiedadRepository.deleteById(id);
     }
 }

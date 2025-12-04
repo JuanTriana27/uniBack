@@ -17,11 +17,13 @@ public class EstadoPropiedadServiceImpl implements EstadoPropiedadService {
 
     private final EstadoPropiedadRepository estadoPropiedadRepository;
 
+    // Metodo para obtener todos los estados propiedad
     @Override
     public List<EstadoPropiedad> getAllEstadoPropiedad() {
         return estadoPropiedadRepository.findAll();
     }
 
+    // Metodo para obtener por ID
     @Override
     public EstadoPropiedadDTO getEstadoPropiedadPorId(Integer id) {
 
@@ -35,6 +37,8 @@ public class EstadoPropiedadServiceImpl implements EstadoPropiedadService {
         return estadoPropiedadDTO;
     }
 
+    // Metodo para crear un nuevo estado propiedad
+    @Override
     public CreateEstadoPropiedadResponse createEstadoPropiedad(CreateEstadoPropiedadRequest createEstadoPropiedadRequest) throws Exception {
         // Poner validaciones lógicas respecto al DTO del Tipo de Propiedad
 
@@ -68,4 +72,51 @@ public class EstadoPropiedadServiceImpl implements EstadoPropiedadService {
         return createEstadoPropiedadResponse;
     }
 
+    // Metodo para actualizar un estado propiedad
+    @Override
+    public CreateEstadoPropiedadResponse updateEstadoPropiedad(Integer id, CreateEstadoPropiedadRequest createEstadoPropiedadRequest) throws Exception {
+        // Verificamos que exista el estado de propiedad
+        EstadoPropiedad estadoPropiedad = estadoPropiedadRepository.findById(id)
+                .orElseThrow(() -> new Exception("Estado propiedad no encontrado"));
+
+        // Validar que el estado de propiedad no sea nulo
+        if (createEstadoPropiedadRequest == null) {
+            throw new Exception("El estado de la propiedad no puede ser nulo");
+        }
+
+        // Validar que el nombre no sea nulo
+        if (createEstadoPropiedadRequest.getNombre() == null ||
+                createEstadoPropiedadRequest.getNombre().isBlank() == true){
+            throw new Exception("El nombre del estado propiedad no puede ser nulo o vacio");
+        }
+
+        // Validar que la descripción del tipo de propiedad a agregar no sea nula ni vacía
+        if (createEstadoPropiedadRequest.getDescripcion() == null ||
+                createEstadoPropiedadRequest.getDescripcion().isBlank() == true){
+            throw new Exception("La descripcion del estado propiedad no puede ser nulo o vacio");
+        }
+
+        // Actualizar los datos de la propiedad con los nuevos valores
+        estadoPropiedad.setNombre(createEstadoPropiedadRequest.getNombre());
+        estadoPropiedad.setDescripcion(createEstadoPropiedadRequest.getDescripcion());
+
+        // Guardar el estado propiedad actualizado
+        estadoPropiedad = estadoPropiedadRepository.save(estadoPropiedad);
+
+        // Mapear y retornar el response
+        return EstadoPropiedadMapper.modelToCreateResponse(estadoPropiedad);
+    }
+
+    // Metodo para eliminar un estado propiedad
+    @Override
+    public void deleteEstadoPropiedad(Integer id) throws Exception {
+
+        // Verificamos que exista
+        if(!estadoPropiedadRepository.existsById(id)){
+            throw new Exception("Estado propiedad no encontrado");
+        }
+
+        // Eliminar estado propiedad
+        estadoPropiedadRepository.deleteById(id);
+    }
 }
