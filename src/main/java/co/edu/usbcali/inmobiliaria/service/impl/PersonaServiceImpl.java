@@ -81,7 +81,7 @@ public class PersonaServiceImpl implements PersonaService {
         }
 
         // Validar codigo postal
-        if (createPersonaRequest.getCodigo_postal() == null || createPersonaRequest.getCodigo_postal() <= 0) {
+        if (createPersonaRequest.getCodigo_postal() == null || createPersonaRequest.getCodigo_postal().isBlank() == true) {
             throw new Exception("El código postal no puede ser nulo o menor o igual a cero");
         }
 
@@ -148,7 +148,7 @@ public class PersonaServiceImpl implements PersonaService {
         }
 
         // Validar codigo postal
-        if (createPersonaRequest.getCodigo_postal() == null || createPersonaRequest.getCodigo_postal() <= 0) {
+        if (createPersonaRequest.getCodigo_postal() == null || createPersonaRequest.getCodigo_postal().isBlank() == true) {
             throw new Exception("El código postal no puede ser nulo o menor o igual a cero");
         }
 

@@ -23,6 +23,6 @@ public class EstadoContrato {
     @Column (name = "descripcion")
     private String descripcion;
 
-    @Column (name = "nombre", nullable = false, length =30)
+    @Column (name = "nombre", nullable = false, length =250)
     private String nombre;
 }

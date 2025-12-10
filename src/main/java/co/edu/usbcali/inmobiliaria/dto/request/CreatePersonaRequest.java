@@ -17,5 +17,5 @@ public class CreatePersonaRequest {
     private String email;
     private String direccion;
     private String ciudad;
-    private Integer codigo_postal;
+    private String codigo_postal;
 }

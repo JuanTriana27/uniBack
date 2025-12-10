@@ -19,9 +19,9 @@ public class EstadoPropiedad {
     @Column (name = "id_estado_propiedad", nullable = false, length =30)
     private Integer idEstadoPropiedad;
 
-    @Column (name = "nombre", length =30)
+    @Column (name = "nombre", length =250)
     private String nombre;
 
-    @Column (name = "descripcion", length =30)
+    @Column (name = "descripcion", length =250)
     private String descripcion;
 }

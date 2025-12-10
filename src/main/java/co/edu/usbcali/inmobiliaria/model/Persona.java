@@ -38,7 +38,7 @@ public class Persona {
     private String ciudad;
 
     @Column (name = "codigo_postal", length =30)
-    private Integer codigo_postal;
+    private String codigo_postal;
 }
 
 
